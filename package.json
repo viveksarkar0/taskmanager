@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
 "scripts": {
-  "dev": "bun run next dev --turbopack",
-  "build": "bun run next build",
-  "start": "bun run next start",
-  "lint": "bun run next lint",
-  "postinstall": "bunx drizzle-kit migrate"
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "postinstall": "bunx drizzle-kit push"
 }
+
 
 ,
   "dependencies": {

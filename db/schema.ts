@@ -11,15 +11,7 @@ export const users = pgTable("users", {
 export const priorityEnum = pgEnum("priority", ["low", "medium", "high"])
 export const statusEnum = pgEnum("status", ["todo", "in_progress", "done"])
 
-export const projects = pgTable("projects", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  description: text("description"),
-  userId: integer("user_id")
-    .references(() => users.id)
-    .notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-})
+
 
 export const categories = pgTable("categories", {
   id: serial("id").primaryKey(),
@@ -40,9 +32,9 @@ export const tasks = pgTable("tasks", {
   userId: integer("user_id")
     .references(() => users.id)
     .notNull(),
-  projectId: integer("project_id").references(() => projects.id),
   categoryId: integer("category_id").references(() => categories.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-})
+});
+
 
