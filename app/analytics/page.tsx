@@ -78,7 +78,7 @@ const AnalyticsPage = () => {
       </div>
 
       {/* Completion Gauge */}
-      <div className="flex justify-between gap-5">
+      <div className=" flex gap-1">
         
 
       <div className="">

@@ -14,7 +14,9 @@ const taskUpdateSchema = z.object({
   dueDate: z.string().optional(),
 })
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, context: { params: { id: string } }) {
+  const { params } = context // Extract params from context
+
   const session = await getServerSession(authOptions)
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -48,7 +50,9 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, context: { params: { id: string } }) {
+  const { params } = context // Extract params from context
+
   const session = await getServerSession(authOptions)
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -68,4 +72,3 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
 
   return NextResponse.json({ message: "Task deleted successfully" })
 }
-
