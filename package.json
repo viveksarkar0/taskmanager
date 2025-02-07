@@ -2,12 +2,14 @@
   "name": "taskmanager",
   "version": "0.1.0",
   "private": true,
- "scripts": {
+"scripts": {
   "dev": "bun run next dev --turbopack",
-  "build": "drizzle-kit push --yes && bun run next build",
+  "build": "bun run next build",
   "start": "bun run next start",
-  "lint": "bun run next lint"
+  "lint": "bun run next lint",
+  "postinstall": "bunx drizzle-kit migrate"
 }
+
 ,
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
