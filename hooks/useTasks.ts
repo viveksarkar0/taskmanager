@@ -12,8 +12,8 @@ const useTasks = () => {
     Error, // ✅ Error type
     Omit<Task, "id" | "createdAt" | "updatedAt">, // ✅ Input type
     { previousTasks?: Task[] } // ✅ Context type
-  >(
-    async (newTask) => {
+  >({
+    mutationFn: async (newTask: Omit<Task, "id" | "createdAt" | "updatedAt">): Promise<Task> => {
       const response = await fetch("/api/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -22,8 +22,7 @@ const useTasks = () => {
       if (!response.ok) throw new Error("Failed to create task")
       return response.json()
     },
-    {
-      onMutate: async (newTask) => {
+      onMutate: async (newTask: Omit<Task, "id" | "createdAt" | "updatedAt">) => {
         await queryClient.cancelQueries({ queryKey: ["tasks"] })
         const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]) || []
 
@@ -33,7 +32,7 @@ const useTasks = () => {
         queryClient.setQueryData(["tasks"], [...previousTasks, optimisticTask])
         return { previousTasks }
       },
-      onError: (_error, _newTask, context) => {
+      onError: (_error: any, _newTask: any, context?: { previousTasks?: Task[] }) => {
         if (context?.previousTasks) queryClient.setQueryData(["tasks"], context.previousTasks)
       },
       onSettled: () => {
@@ -48,8 +47,8 @@ const useTasks = () => {
     Error, // ✅ Error type
     Partial<Task> & { id: number }, // ✅ Input type
     { previousTasks?: Task[] } // ✅ Context type
-  >(
-    async ({ id, ...updates }) => {
+  >({
+    mutationFn: async ({ id, ...updates }: Partial<Task> & { id: number }) => {
       const response = await fetch(`/api/tasks/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -58,12 +57,13 @@ const useTasks = () => {
       if (!response.ok) throw new Error("Failed to update task")
       return response.json()
     },
-    {
-      onMutate: async (updatedTask) => {
+    onMutate: async (updatedTask: Partial<Task>) => {
         await queryClient.cancelQueries({ queryKey: ["tasks"] })
         const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]) || []
 
-        updateTask(updatedTask.id, updatedTask)
+        if (updatedTask.id !== undefined) {
+          updateTask(updatedTask.id, updatedTask)
+        }
 
         queryClient.setQueryData(
           ["tasks"],
@@ -74,7 +74,7 @@ const useTasks = () => {
 
         return { previousTasks }
       },
-      onError: (_error, _updatedTask, context) => {
+      onError: (_error: any, _updatedTask: any, context?: { previousTasks?: Task[] }) => {
         if (context?.previousTasks) queryClient.setQueryData(["tasks"], context.previousTasks)
       },
       onSettled: () => {
@@ -89,13 +89,12 @@ const useTasks = () => {
     Error, // ✅ Error type
     number, // ✅ Input type (task ID)
     { previousTasks?: Task[] } // ✅ Context type
-  >(
-    async (taskId) => {
+  >({
+    mutationFn: async (taskId: number) => {
       const response = await fetch(`/api/tasks/${taskId}`, { method: "DELETE" })
       if (!response.ok) throw new Error("Failed to delete task")
     },
-    {
-      onMutate: async (taskId) => {
+    onMutate: async (taskId: number) => {
         await queryClient.cancelQueries({ queryKey: ["tasks"] })
         const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]) || []
 
@@ -104,7 +103,7 @@ const useTasks = () => {
         queryClient.setQueryData(["tasks"], previousTasks.filter((task) => task.id !== taskId))
         return { previousTasks }
       },
-      onError: (_error, _taskId, context) => {
+      onError: (_error: any, _taskId: any, context?: { previousTasks?: Task[] }) => {
         if (context?.previousTasks) queryClient.setQueryData(["tasks"], context.previousTasks)
       },
       onSettled: () => {
