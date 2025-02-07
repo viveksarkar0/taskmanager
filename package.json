@@ -4,7 +4,7 @@
   "private": true,
  "scripts": {
   "dev": "bun run next dev --turbopack",
-  "build": "drizzle-kit push && bun run next build",
+  "build": "drizzle-kit push --yes && bun run next build",
   "start": "bun run next start",
   "lint": "bun run next lint"
 }
