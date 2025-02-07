@@ -16,7 +16,7 @@ const AnalyticsPage = () => {
   const completedTasks = tasks.filter((task) => task.status === "done").length
   const pendingTasks = totalTasks - completedTasks
 
-  // Priority Breakdown
+  // Priority Breakdown Data
   const priorityData = [
     { name: "Low", value: tasks.filter((task) => task.priority === "low").length },
     { name: "Medium", value: tasks.filter((task) => task.priority === "medium").length },
@@ -46,7 +46,7 @@ const AnalyticsPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         {/* Total Tasks */}
-        <Card className="p-6 shadow-lg bg-white rounded-xl border border-gray-200">
+        <Card className="shadow-lg bg-white rounded-xl border border-gray-200">
           <CardHeader>
             <CardTitle className="text-lg text-indigo-700">📌 Total Tasks</CardTitle>
           </CardHeader>
@@ -56,7 +56,7 @@ const AnalyticsPage = () => {
         </Card>
 
         {/* Completed Tasks */}
-        <Card className="p-6 shadow-lg bg-white rounded-xl border border-gray-200">
+        <Card className="shadow-lg bg-white rounded-xl border border-gray-200">
           <CardHeader>
             <CardTitle className="text-lg text-green-600">✅ Completed Tasks</CardTitle>
           </CardHeader>
@@ -66,7 +66,7 @@ const AnalyticsPage = () => {
         </Card>
 
         {/* Pending Tasks */}
-        <Card className="p-6 shadow-lg bg-white rounded-xl border border-gray-200">
+        <Card className="shadow-lg bg-white rounded-xl border border-gray-200">
           <CardHeader>
             <CardTitle className="text-lg text-red-600">⏳ Pending Tasks</CardTitle>
           </CardHeader>
@@ -77,30 +77,31 @@ const AnalyticsPage = () => {
 
       </div>
 
-      {/* Completion Gauge */}
-      <div className=" flex gap-1">
+      {/* Completion Gauge & Priority Breakdown */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
+        {/* Completion Gauge */}
+        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 flex justify-center items-center">
+          <TaskGauge tasks={tasks} />
+        </div>
 
-      <div className="">
-        <TaskGauge tasks={tasks} />
-      </div>
+        {/* Priority Breakdown */}
+        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+          <h3 className="text-2xl font-semibold text-indigo-700 mb-4 text-center">⚡ Priority Breakdown</h3>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={priorityData} layout="vertical">
+              <XAxis type="number" hide />
+              <YAxis type="category" dataKey="name" width={80} />
+              <Tooltip />
+              <Bar dataKey="value" radius={[8, 8, 8, 8]} barSize={30}>
+                {priorityData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
 
-      {/* Priority Breakdown */}
-      <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-        <h3 className="text-2xl font-semibold text-indigo-700 mb-4 text-center">⚡ Priority Breakdown</h3>
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart data={priorityData} layout="vertical">
-            <XAxis type="number" hide />
-            <YAxis type="category" dataKey="name" width={80} />
-            <Tooltip />
-            <Bar dataKey="value" radius={[8, 8, 8, 8]} barSize={30}>
-              {priorityData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index]} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
       </div>
     </div>
   )

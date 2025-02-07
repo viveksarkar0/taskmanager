@@ -23,7 +23,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
           <div className="mt-2 flex justify-between items-center">
             <span className={`px-2 py-1 rounded-full text-xs ${getPriorityColor(task.priority)}`}>{task.priority}</span>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              Due: {new Date(task.dueDate).toLocaleDateString()}
+              Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "No due date"}
             </span>
           </div>
         </li>
